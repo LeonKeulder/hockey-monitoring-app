@@ -5,232 +5,400 @@ html
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SA Masters Ladies 50+ Squad - LK Performance Hockey</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .card { background: white; padding: 24px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .button { background: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; margin: 8px 4px; transition: all 0.2s; }
+        .button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .button.green { background: #16a34a; } .button.green:hover { box-shadow: 0 4px 12px rgba(22,163,74,0.3); }
+        .button.purple { background: #9333ea; } .button.purple:hover { box-shadow: 0 4px 12px rgba(147,51,234,0.3); }
+        .button.red { background: #dc2626; } .button.red:hover { box-shadow: 0 4px 12px rgba(220,38,38,0.3); }
+        .button.yellow { background: #ca8a04; } .button.yellow:hover { box-shadow: 0 4px 12px rgba(202,138,4,0.3); }
+        .button.orange { background: #ea580c; } .button.orange:hover { box-shadow: 0 4px 12px rgba(234,88,12,0.3); }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+        .hidden { display: none; }
+        .tabs { display: flex; border-bottom: 2px solid #e5e7eb; margin-bottom: 20px; }
+        .tab { padding: 12px 24px; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; }
+        .tab.active { border-bottom-color: #2563eb; color: #2563eb; }
+        .tab:hover { background: #f3f4f6; }
+        .input { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; margin: 8px 0; }
+        .input:focus { outline: none; border-color: #2563eb; }
+        .progress-bar { width: 100%; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #2563eb; transition: width 0.3s; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+        .badge.green { background: #dcfce7; color: #166534; }
+        .badge.yellow { background: #fef3c7; color: #92400e; }
+        .badge.red { background: #fee2e2; color: #991b1b; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; padding: 24px; border-radius: 12px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .whatsapp { position: fixed; bottom: 20px; right: 20px; background: #25d366; color: white; padding: 16px; border-radius: 50%; text-decoration: none; font-size: 20px; box-shadow: 0 4px 20px rgba(37,211,102,0.3); }
+        .exercise-card { border: 2px solid #e5e7eb; border-radius: 8px; padding: 16px; margin: 12px 0; }
+        .exercise-image { width: 100%; height: 200px; background: #f3f4f6; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; color: #6b7280; }
+        .injury-alert { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 8px 12px; border-radius: 6px; margin: 8px 0; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } .container { padding: 12px; } }
+    </style>
 </head>
-<body class="bg-gray-50">
+<body>
     <!-- Login Screen -->
-    <div id="loginScreen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-green-600">
-        <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md mx-4">
-            <div class="text-center mb-8">
-                <div class="bg-green-600 p-4 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-                    <svg class="h-10 w-10 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
+    <div id="login" class="container">
+        <div class="card" style="text-align: center; max-width: 500px; margin: 100px auto;">
+            <div style="background: #16a34a; color: white; padding: 20px; border-radius: 50%; width: 80px; height: 80px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🏑</div>
+            <h1 style="margin-bottom: 8px;">SA Masters Ladies 50+ Squad</h1>
+            <h2 style="color: #16a34a; margin-bottom: 20px;">LK Performance Hockey Monitoring Tool</h2>
+            <p style="margin-bottom: 30px; color: #6b7280;">Complete training, wellness, and performance tracking system</p>
+            
+            <div style="margin-bottom: 30px;">
+                <h3 style="margin-bottom: 16px;">Getting Started Guide:</h3>
+                <div style="text-align: left; background: #f8fafc; padding: 20px; border-radius: 8px;">
+                    <p><strong>📱 Step 1:</strong> Choose your role below</p>
+                    <p><strong>📊 Step 2:</strong> Access your personalized dashboard</p>
+                    <p><strong>🏑 Step 3:</strong> Track training, wellness, and progress</p>
+                    <p><strong>🏆 Step 4:</strong> Prepare for World Cup Masters 2026</p>
                 </div>
-                <h1 class="text-2xl font-bold text-gray-900 mb-2">SA Masters Ladies 50+</h1>
-                <p class="text-blue-600 font-medium">LK Performance Hockey Monitoring</p>
             </div>
             
-            <div class="space-y-4">
-                <button onclick="showDashboard('player')" class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700">
-                    Login as Player
-                </button>
-                <button onclick="showDashboard('coach')" class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700">
-                    Login as Coach
-                </button>
-                <button onclick="showDashboard('manager')" class="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700">
-                    Login as Team Manager
-                </button>
-            </div>
+            <button class="button" onclick="login('player')" style="width: 200px; margin: 10px;">Login as Player</button><br>
+            <button class="button green" onclick="login('coach')" style="width: 200px; margin: 10px;">Login as Coach</button><br>
+            <button class="button purple" onclick="login('manager')" style="width: 200px; margin: 10px;">Login as Team Manager</button>
             
-            <div class="mt-6 text-center">
-                <a href="https://wa.me/27833095413" target="_blank" class="text-green-600 hover:text-green-700 text-sm font-medium">
-                    Contact LK Performance: +27 83 309 5413
-                </a>
-            </div>
+            <p style="margin-top: 30px;">
+                <a href="https://wa.me/27833095413" style="color: #25d366; text-decoration: none;">📱 Contact LK Performance: +27 83 309 5413</a>
+            </p>
         </div>
     </div>
 
     <!-- Dashboard -->
-    <div id="dashboard" class="hidden min-h-screen">
-        <!-- Header -->
-        <header class="bg-white shadow-sm border-b">
-            <div class="max-w-7xl mx-auto px-4 py-4">
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <div class="bg-green-600 p-2 rounded-lg">
-                            <svg class="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h1 class="text-xl font-semibold text-gray-900">SA Masters Ladies 50+</h1>
-                            <p class="text-sm text-gray-600">LK Performance Hockey</p>
-                        </div>
-                    </div>
-                    <button onclick="showLogin()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
-                        Sign Out
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="max-w-7xl mx-auto px-4 py-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Left Column -->
-                <div class="lg:col-span-2">
-                    <!-- Welcome -->
-                    <div class="bg-gradient-to-r from-blue-600 to-green-600 rounded-lg p-6 text-white mb-6">
-                        <h2 class="text-2xl font-bold mb-2">Welcome to Your Hockey Monitoring System</h2>
-                        <p class="text-blue-100">Complete training, wellness, and performance tracking</p>
-                    </div>
-
-                    <!-- Feature Content -->
-                    <div id="content" class="bg-white rounded-lg shadow-sm p-6">
-                        <h3 class="text-lg font-semibold mb-4">Select a feature to get started</h3>
-                        <p class="text-gray-600">Choose from the Quick Actions menu to access training schedules, performance tracking, wellness monitoring, or World Cup preparation tools.</p>
-                    </div>
-                </div>
-
-                <!-- Right Column - Quick Actions -->
+    <div id="dashboard" class="container hidden">
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
                 <div>
-                    <div class="bg-white rounded-lg shadow-sm p-6">
-                        <h3 class="text-lg font-semibold mb-4 text-blue-800">Quick Actions</h3>
-                        <div id="actions" class="space-y-3">
-                            <!-- Actions will be loaded here -->
-                        </div>
-                    </div>
-
-                    <!-- Contact -->
-                    <div class="bg-white rounded-lg shadow-sm p-6 mt-6">
-                        <h3 class="font-semibold mb-3">Contact LK Performance</h3>
-                        <a href="https://wa.me/27833095413" target="_blank" 
-                           class="flex items-center gap-2 text-green-600 hover:text-green-700">
-                            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.703"/>
-                            </svg>
-                            <span class="text-sm">+27 83 309 5413</span>
-                        </a>
-                    </div>
+                    <h1>SA Masters Ladies 50+ Squad</h1>
+                    <p style="color: #6b7280;">LK Performance Hockey Monitoring Tool</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <span id="userInfo" style="font-weight: 500;"></span>
+                    <button class="button red" onclick="logout()">Sign Out</button>
                 </div>
             </div>
-        </main>
+        </div>
+
+        <div class="grid">
+            <div>
+                <!-- Welcome Section -->
+                <div class="card" style="background: linear-gradient(135deg, #2563eb, #16a34a); color: white;">
+                    <h2 style="margin-bottom: 8px;">Welcome to Your Hockey Monitoring System</h2>
+                    <p style="opacity: 0.9;">Complete training, wellness, and performance tracking platform for World Cup Masters 2026 preparation</p>
+                </div>
+
+                <!-- Quick Stats -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #2563eb;">3</div>
+                        <div style="color: #6b7280; font-size: 14px;">Upcoming Games</div>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #16a34a;">18</div>
+                        <div style="color: #6b7280; font-size: 14px;">Squad Players</div>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #9333ea;">89%</div>
+                        <div style="color: #6b7280; font-size: 14px;">Team Fitness</div>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #ea580c;">92%</div>
+                        <div style="color: #6b7280; font-size: 14px;">World Cup Ready</div>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div id="content" class="card">
+                    <h3>Select a feature to get started</h3>
+                    <p style="color: #6b7280; margin-top: 8px;">Choose from the Quick Actions menu to access all the features we've built together.</p>
+                </div>
+            </div>
+
+            <div>
+                <!-- Quick Actions -->
+                <div class="card">
+                    <h3 style="color: #2563eb; margin-bottom: 16px;">🚀 Quick Actions</h3>
+                    <div id="actions">
+                        <!-- Actions will load here -->
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div class="card">
+                    <h3 style="margin-bottom: 12px;">Contact LK Performance</h3>
+                    <p><a href="https://wa.me/27833095413" style="color: #25d366; text-decoration: none;">📱 +27 83 309 5413</a></p>
+                    <p style="color: #6b7280; font-size: 14px; margin-top: 8px;">Professional hockey coaching and performance monitoring</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Floating WhatsApp -->
-    <div class="fixed bottom-6 right-6 z-50">
-        <a href="https://wa.me/27833095413?text=Hi%20LK%20Performance%20Hockey!%20I'm%20using%20the%20SA%20Masters%20Ladies%2050%2B%20Squad%20monitoring%20system." 
-           target="_blank"
-           class="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 text-white shadow-lg flex items-center justify-center">
-            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.703"/>
-            </svg>
-        </a>
+    <!-- Modal for various features -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 id="modalTitle">Modal Title</h3>
+                <button onclick="closeModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+            </div>
+            <div id="modalBody">Modal content</div>
+        </div>
     </div>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/27833095413?text=Hi%20LK%20Performance%20Hockey!%20I'm%20using%20the%20SA%20Masters%20Ladies%2050%2B%20Squad%20monitoring%20system%20and%20need%20assistance." 
+       target="_blank" class="whatsapp">💬</a>
 
     <script>
         let currentRole = '';
+        let currentTab = '';
 
-        function showLogin() {
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('dashboard').classList.add('hidden');
-        }
+        // Mock data - all the data we built together
+        const mockData = {
+            worldCupSquad: [
+                { name: "Sarah Johnson", position: "Forward", fitness: 92, lastTrial: "6:45", injured: false, contact: "+27821234567" },
+                { name: "Mary Williams", position: "Midfielder", fitness: 88, lastTrial: "7:12", injured: false, contact: "+27821234568" },
+                { name: "Linda Brown", position: "Defender", fitness: 85, lastTrial: "7:30", injured: true, injury: "Minor ankle strain", returnDate: "2024-10-15", contact: "+27821234569" },
+                { name: "Patricia Davis", position: "Goalkeeper", fitness: 90, lastTrial: "6:58", injured: false, contact: "+27821234570" },
+                { name: "Jennifer Wilson", position: "Forward", fitness: 87, lastTrial: "7:05", injured: false, contact: "+27821234571" },
+                { name: "Susan Miller", position: "Midfielder", fitness: 91, lastTrial: "6:48", injured: false, contact: "+27821234572" }
+            ],
+            
+            provincialTrainingPrograms: [
+                {
+                    name: "High-Intensity Interval Training",
+                    category: "Cardio",
+                    exercises: [
+                        { name: "Sprint Intervals", sets: "6 x 30s", rest: "90s", intensity: "High", image: "sprint_training.jpg" },
+                        { name: "Shuttle Runs", sets: "4 x 20m", rest: "60s", intensity: "High", image: "shuttle_runs.jpg" },
+                        { name: "Burpees", sets: "3 x 10", rest: "45s", intensity: "Medium", image: "burpees.jpg" }
+                    ]
+                },
+                {
+                    name: "Strength & Power",
+                    category: "Strength",
+                    exercises: [
+                        { name: "Squats", sets: "4 x 12", rest: "60s", intensity: "Medium", image: "squats.jpg", modifications: "Chair-assisted for beginners" },
+                        { name: "Push-ups", sets: "3 x 10", rest: "45s", intensity: "Medium", image: "pushups.jpg", modifications: "Wall push-ups for easier variation" },
+                        { name: "Lunges", sets: "3 x 10 each leg", rest: "45s", intensity: "Medium", image: "lunges.jpg" }
+                    ]
+                },
+                {
+                    name: "Recovery & Mobility",
+                    category: "Recovery",
+                    exercises: [
+                        { name: "Dynamic Stretching", sets: "10 minutes", intensity: "Low", image: "stretching.jpg" },
+                        { name: "Foam Rolling", sets: "15 minutes", intensity: "Low", image: "foam_rolling.jpg" },
+                        { name: "Yoga Flow", sets: "20 minutes", intensity: "Low", image: "yoga.jpg" }
+                    ]
+                }
+            ],
 
-        function showDashboard(role) {
+            worldCupRoadmap: [
+                {
+                    id: 1,
+                    title: "African Masters International",
+                    date: "November 21-24, 2025",
+                    location: "Johannesburg, SA",
+                    status: "upcoming",
+                    description: "Continental championship preparation tournament",
+                    fitnessTarget: "85%",
+                    keyFocus: "Team cohesion and match fitness"
+                },
+                {
+                    id: 2,
+                    title: "National Training Camp",
+                    date: "February 2026 (TBC)",
+                    location: "Durban, KZN",
+                    status: "planned",
+                    description: "Intensive preparation camp",
+                    fitnessTarget: "90%",
+                    keyFocus: "Technical skills and tactical preparation"
+                },
+                {
+                    id: 3,
+                    title: "IPT Tournament",
+                    date: "February 2026 (TBC)",
+                    location: "Durban, KZN",
+                    status: "planned",
+                    description: "International preparation tournament",
+                    fitnessTarget: "92%",
+                    keyFocus: "Competition readiness"
+                },
+                {
+                    id: 4,
+                    title: "World Cup Masters 2026",
+                    date: "July 22 - August 2, 2026",
+                    location: "Rotterdam, Netherlands",
+                    status: "target",
+                    description: "Main tournament - our ultimate goal",
+                    fitnessTarget: "95%",
+                    keyFocus: "Peak performance and medal contention"
+                }
+            ],
+
+            weeklySchedule: [
+                { day: "Monday", session: "Strength & Conditioning", time: "18:00", duration: "60 min", focus: "Upper body strength" },
+                { day: "Tuesday", session: "Skills Training", time: "18:00", duration: "90 min", focus: "Ball control & passing" },
+                { day: "Wednesday", session: "HIIT Cardio", time: "18:00", duration: "45 min", focus: "Cardiovascular fitness" },
+                { day: "Thursday", session: "Tactical Training", time: "18:00", duration: "90 min", focus: "Game situations" },
+                { day: "Friday", session: "Recovery Session", time: "18:00", duration: "60 min", focus: "Stretching & mobility" },
+                { day: "Saturday", session: "Match/Scrimmage", time: "14:00", duration: "120 min", focus: "Game application" },
+                { day: "Sunday", session: "1.2km Time Trials", time: "09:00", duration: "30 min", focus: "Endurance testing" }
+            ]
+        };
+
+        function login(role) {
             currentRole = role;
-            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('login').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('userInfo').textContent = `Logged in as ${role.charAt(0).toUpperCase() + role.slice(1)}`;
             loadActions(role);
         }
 
+        function logout() {
+            currentRole = '';
+            document.getElementById('login').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+        }
+
         function loadActions(role) {
-            const actionsDiv = document.getElementById('actions');
+            const actions = document.getElementById('actions');
             
             if (role === 'player') {
-                actionsDiv.innerHTML = `
-                    <button onclick="showProfile()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">My Profile</button>
-                    <button onclick="showTraining()" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700">Training Schedule</button>
-                    <button onclick="showWellness()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700">Wellness Log</button>
-                    <button onclick="showTimeTrials()" class="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700">1.2km Time Trials</button>
-                    <button onclick="showWorldCup()" class="w-full bg-yellow-600 text-white py-3 rounded-lg hover:bg-yellow-700">World Cup Journey</button>
+                actions.innerHTML = `
+                    <button class="button" onclick="showPlayerProfile()" style="width: 100%; margin: 4px 0;">👤 My Profile</button>
+                    <button class="button purple" onclick="showWeeklySchedule()" style="width: 100%; margin: 4px 0;">📅 Weekly Schedule</button>
+                    <button class="button green" onclick="showWellnessTracking()" style="width: 100%; margin: 4px 0;">💪 Wellness Tracking</button>
+                    <button class="button red" onclick="showTimeTrials()" style="width: 100%; margin: 4px 0;">⏱️ 1.2km Time Trials</button>
+                    <button class="button yellow" onclick="showWorldCupRoadmap()" style="width: 100%; margin: 4px 0;">🏆 World Cup Journey</button>
+                    <button class="button orange" onclick="showInjuryReport()" style="width: 100%; margin: 4px 0;">🏥 Report Injury</button>
                 `;
             } else if (role === 'coach') {
-                actionsDiv.innerHTML = `
-                    <button onclick="showRoster()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">Team Roster</button>
-                    <button onclick="showPrograms()" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700">Training Programs</button>
-                    <button onclick="showAnalytics()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700">Performance Analytics</button>
-                    <button onclick="showWorldCup()" class="w-full bg-yellow-600 text-white py-3 rounded-lg hover:bg-yellow-700">World Cup Planning</button>
+                actions.innerHTML = `
+                    <button class="button" onclick="showTeamRoster()" style="width: 100%; margin: 4px 0;">👥 Team Roster</button>
+                    <button class="button purple" onclick="showExercisePrograms()" style="width: 100%; margin: 4px 0;">🏋️ Exercise Programs</button>
+                    <button class="button green" onclick="showTeamWellness()" style="width: 100%; margin: 4px 0;">📊 Team Wellness</button>
+                    <button class="button red" onclick="showInjuryTracking()" style="width: 100%; margin: 4px 0;">🏥 Injury Tracking</button>
+                    <button class="button yellow" onclick="showWorldCupRoadmap()" style="width: 100%; margin: 4px 0;">🏆 World Cup Planning</button>
+                    <button class="button orange" onclick="showPerformanceAnalytics()" style="width: 100%; margin: 4px 0;">📈 Performance Analytics</button>
                 `;
             } else {
-                actionsDiv.innerHTML = `
-                    <button onclick="showManagement()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">Squad Management</button>
-                    <button onclick="showBudget()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700">Budget & Finance</button>
-                    <button onclick="showWhatsApp()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700">WhatsApp Hub</button>
+                actions.innerHTML = `
+                    <button class="button" onclick="showSquadManagement()" style="width: 100%; margin: 4px 0;">👥 Squad Management</button>
+                    <button class="button green" onclick="showBudgetFinance()" style="width: 100%; margin: 4px 0;">💰 Budget & Finance</button>
+                    <button class="button purple" onclick="showTournamentPlanning()" style="width: 100%; margin: 4px 0;">🏆 Tournament Planning</button>
+                    <button class="button green" onclick="showWhatsAppHub()" style="width: 100%; margin: 4px 0;">💬 WhatsApp Hub</button>
                 `;
             }
         }
 
-        function showProfile() {
+        // Player Functions
+        function showPlayerProfile() {
             document.getElementById('content').innerHTML = `
-                <h3 class="text-lg font-semibold mb-4">Player Profile</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <h4 class="font-medium text-blue-800 mb-2">Personal Information</h4>
-                        <p><strong>Name:</strong> Sarah Johnson</p>
+                <h3>👤 Player Profile - Sarah Johnson</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="background: #dbeafe; padding: 16px; border-radius: 8px;">
+                        <h4 style="color: #1e40af; margin-bottom: 12px;">Personal Information</h4>
                         <p><strong>Position:</strong> Forward</p>
                         <p><strong>Age Group:</strong> 50+</p>
                         <p><strong>Experience:</strong> 15 years</p>
+                        <p><strong>Jersey Number:</strong> 10</p>
                     </div>
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <h4 class="font-medium text-green-800 mb-2">Current Fitness</h4>
-                        <p><strong>Overall:</strong> 92%</p>
-                        <p><strong>Last 1.2km:</strong> 6:45</p>
+                    <div style="background: #dcfce7; padding: 16px; border-radius: 8px;">
+                        <h4 style="color: #166534; margin-bottom: 12px;">Current Fitness</h4>
+                        <p><strong>Overall Fitness:</strong> 92%</p>
+                        <p><strong>Last 1.2km Time:</strong> 6:45</p>
                         <p><strong>Training Days/Week:</strong> 4</p>
-                        <p><strong>World Cup Ready:</strong> 89%</p>
+                        <p><strong>World Cup Readiness:</strong> 89%</p>
+                    </div>
+                    <div style="background: #fef3c7; padding: 16px; border-radius: 8px;">
+                        <h4 style="color: #92400e; margin-bottom: 12px;">Goals & Targets</h4>
+                        <p><strong>Target 1.2km Time:</strong> 6:30</p>
+                        <p><strong>World Cup Goal:</strong> Medal contention</p>
+                        <p><strong>Next Milestone:</strong> African Masters</p>
+                    </div>
+                    <div style="background: #f3e8ff; padding: 16px; border-radius: 8px;">
+                        <h4 style="color: #7c3aed; margin-bottom: 12px;">Recent Activity</h4>
+                        <p>✅ Completed strength training</p>
+                        <p>✅ Logged wellness data</p>
+                        <p>⏳ Time trial due tomorrow</p>
+                        <p>📈 Fitness improving steadily</p>
                     </div>
                 </div>
             `;
         }
 
-        function showTraining() {
-            document.getElementById('content').innerHTML = `
-                <h3 class="text-lg font-semibold mb-4">Training Schedule - This Week</h3>
-                <div class="space-y-4">
-                    <div class="bg-white border rounded-lg p-4">
-                        <h4 class="font-medium">Monday - Strength & Conditioning</h4>
-                        <p class="text-sm text-gray-600">Bodyweight squats: 3 x 15</p>
-                        <p class="text-sm text-gray-600">Wall push-ups: 3 x 12</p>
-                        <p class="text-sm text-gray-600">Step-ups: 3 x 10 each leg</p>
-                    </div>
-                    <div class="bg-white border rounded-lg p-4">
-                        <h4 class="font-medium">Wednesday - Skills & Tactics</h4>
-                        <p class="text-sm text-gray-600">Ball control drills: 20 minutes</p>
-                        <p class="text-sm text-gray-600">Passing practice: 30 minutes</p>
-                        <p class="text-sm text-gray-600">Game scenarios: 40 minutes</p>
-                    </div>
-                    <div class="bg-white border rounded-lg p-4">
-                        <h4 class="font-medium">Friday - Endurance & Recovery</h4>
-                        <p class="text-sm text-gray-600">Light jogging: 30 minutes</p>
-                        <p class="text-sm text-gray-600">Stretching: 20 minutes</p>
-                        <p class="text-sm text-gray-600">Core work: 25 minutes</p>
-                    </div>
-                </div>
+        function showWeeklySchedule() {
+            let scheduleHTML = `
+                <h3>📅 Weekly Training Schedule</h3>
+                <div style="margin-top: 20px;">
             `;
+            
+            mockData.weeklySchedule.forEach(session => {
+                scheduleHTML += `
+                    <div class="exercise-card">
+                        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+                            <h4>${session.day} - ${session.session}</h4>
+                            <span class="badge green">${session.duration}</span>
+                        </div>
+                        <p><strong>Time:</strong> ${session.time}</p>
+                        <p><strong>Focus:</strong> ${session.focus}</p>
+                    </div>
+                `;
+            });
+            
+            scheduleHTML += `</div>`;
+            document.getElementById('content').innerHTML = scheduleHTML;
         }
 
-        function showWellness() {
+        function showWellnessTracking() {
             document.getElementById('content').innerHTML = `
-                <h3 class="text-lg font-semibold mb-4">Wellness Tracking</h3>
-                <div class="bg-white border rounded-lg p-6">
-                    <h4 class="font-medium mb-4">Today's Wellness Check</h4>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Energy Level (1-10)</label>
-                            <input type="range" min="1" max="10" value="8" class="w-full">
-                            <span class="text-sm text-gray-600">Current: 8/10</span>
+                <h3>💪 Wellness Tracking</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div class="exercise-card">
+                        <h4>Today's Wellness Check</h4>
+                        <div style="margin: 16px 0;">
+                            <label style="display: block; margin-bottom: 8px;"><strong>Energy Level (1-10)</strong></label>
+                            <input type="range" min="1" max="10" value="8" class="input" style="margin: 0;">
+                            <span style="color: #6b7280; font-size: 14px;">Current: 8/10</span>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Sleep Quality (1-10)</label>
-                            <input type="range" min="1" max="10" value="7" class="w-full">
-                            <span class="text-sm text-gray-600">Current: 7/10</span>
+                        <div style="margin: 16px 0;">
+                            <label style="display: block; margin-bottom: 8px;"><strong>Sleep Quality (1-10)</strong></label>
+                            <input type="range" min="1" max="10" value="7" class="input" style="margin: 0;">
+                            <span style="color: #6b7280; font-size: 14px;">Current: 7/10</span>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Muscle Soreness (1-10)</label>
-                            <input type="range" min="1" max="10" value="3" class="w-full">
-                            <span class="text-sm text-gray-600">Current: 3/10</span>
+                        <div style="margin: 16px 0;">
+                            <label style="display: block; margin-bottom: 8px;"><strong>Muscle Soreness (1-10)</strong></label>
+                            <input type="range" min="1" max="10" value="3" class="input" style="margin: 0;">
+                            <span style="color: #6b7280; font-size: 14px;">Current: 3/10</span>
                         </div>
-                        <button class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Save Today's Log</button>
+                        <button class="button green" style="width: 100%;">Save Today's Log</button>
+                    </div>
+                    <div class="exercise-card">
+                        <h4>Weekly Wellness Trends</h4>
+                        <div style="margin: 16px 0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Average Energy:</span>
+                                <span style="font-weight: bold; color: #16a34a;">7.8/10</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Average Sleep:</span>
+                                <span style="font-weight: bold; color: #2563eb;">7.2/10</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Recovery Status:</span>
+                                <span style="font-weight: bold; color: #16a34a;">Excellent</span>
+                            </div>
+                        </div>
+                        <div style="background: #dcfce7; padding: 12px; border-radius: 6px;">
+                            <p style="color: #166534; font-size: 14px;">✅ You're maintaining excellent wellness levels! Keep up the great work for World Cup preparation.</p>
+                        </div>
                     </div>
                 </div>
             `;
@@ -238,179 +406,509 @@ html
 
         function showTimeTrials() {
             document.getElementById('content').innerHTML = `
-                <h3 class="text-lg font-semibold mb-4">1.2km Time Trials</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white border rounded-lg p-4">
-                        <h4 class="font-medium mb-3">Record New Time</h4>
-                        <div class="space-y-3">
-                            <input type="date" class="w-full border rounded-lg px-3 py-2" value="${new Date().toISOString().split('T')[0]}">
-                            <input type="text" placeholder="6:45" class="w-full border rounded-lg px-3 py-2">
-                            <button class="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700">Record Time</button>
+                <h3>⏱️ 1.2km Time Trials</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div class="exercise-card">
+                        <h4>Record New Time</h4>
+                        <input type="date" class="input" value="${new Date().toISOString().split('T')[0]}">
+                        <input type="text" placeholder="6:45" class="input">
+                        <select class="input">
+                            <option>Perfect conditions</option>
+                            <option>Windy</option>
+                            <option>Hot weather</option>
+                            <option>Cold weather</option>
+                            <option>Rainy</option>
+                        </select>
+                        <textarea class="input" placeholder="Notes about the trial..." rows="3"></textarea>
+                        <button class="button red" style="width: 100%;">Record Time Trial</button>
+                    </div>
+                    <div class="exercise-card">
+                        <h4>Recent Time Trials</h4>
+                        <div style="margin: 16px 0;">
+                            <div style="display: flex; justify-between; align-items: center; padding: 8px; background: #f9fafb; border-radius: 4px; margin-bottom: 8px;">
+                                <span style="font-size: 14px;">Oct 1, 2024</span>
+                                <span style="font-weight: bold; color: #16a34a;">6:45</span>
+                            </div>
+                            <div style="display: flex; justify-between; align-items: center; padding: 8px; background: #f9fafb; border-radius: 4px; margin-bottom: 8px;">
+                                <span style="font-size: 14px;">Sep 24, 2024</span>
+                                <span style="font-weight: bold;">6:52</span>
+                            </div>
+                            <div style="display: flex; justify-between; align-items: center; padding: 8px; background: #f9fafb; border-radius: 4px; margin-bottom: 8px;">
+                                <span style="font-size: 14px;">Sep 17, 2024</span>
+                                <span style="font-weight: bold;">6:58</span>
+                            </div>
+                        </div>
+                        <div style="background: #dcfce7; padding: 12px; border-radius: 6px;">
+                            <p style="color: #166534; font-size: 14px;">📈 Excellent progress! You're 15 seconds faster than last month. Target: 6:30 for World Cup.</p>
                         </div>
                     </div>
-                    <div class="bg-white border rounded-lg p-4">
-                        <h4 class="font-medium mb-3">Recent Times</h4>
-                        <div class="space-y-2">
-                            <div class="flex justify-between p-2 bg-gray-50 rounded">
-                                <span class="text-sm">Oct 1, 2024</span>
-                                <span class="font-medium text-green-600">6:45</span>
+                </div>
+            `;
+        }
+
+        function showWorldCupRoadmap() {
+            let roadmapHTML = `
+                <h3>🏆 World Cup Masters 2026 Journey</h3>
+                <div style="margin-top: 20px;">
+            `;
+            
+            mockData.worldCupRoadmap.forEach(milestone => {
+                const statusColor = milestone.status === 'upcoming' ? 'yellow' : milestone.status === 'planned' ? 'blue' : 'green';
+                roadmapHTML += `
+                    <div class="exercise-card" style="border-color: ${statusColor === 'yellow' ? '#fbbf24' : statusColor === 'blue' ? '#3b82f6' : '#10b981'};">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                            <div>
+                                <h4>${milestone.title}</h4>
+                                <p style="color: #6b7280; margin: 4px 0;">${milestone.date} • ${milestone.location}</p>
                             </div>
-                            <div class="flex justify-between p-2 bg-gray-50 rounded">
-                                <span class="text-sm">Sep 24, 2024</span>
-                                <span class="font-medium">6:52</span>
+                            <span class="badge ${statusColor === 'yellow' ? 'yellow' : statusColor === 'blue' ? 'green' : 'green'}">${milestone.status.charAt(0).toUpperCase() + milestone.status.slice(1)}</span>
+                        </div>
+                        <p style="margin-bottom: 8px;">${milestone.description}</p>
+                        <p><strong>Fitness Target:</strong> ${milestone.fitnessTarget}</p>
+                        <p><strong>Key Focus:</strong> ${milestone.keyFocus}</p>
+                        <button class="button" onclick="showMilestoneDetails('${milestone.id}')" style="margin-top: 8px;">View Details</button>
+                    </div>
+                `;
+            });
+            
+            roadmapHTML += `
+                </div>
+                <div style="background: #dbeafe; padding: 16px; border-radius: 8px; margin-top: 20px;">
+                    <h4 style="color: #1e40af; margin-bottom: 12px;">Your World Cup Progress</h4>
+                    <div class="progress-bar" style="margin: 12px 0;">
+                        <div class="progress-fill" style="width: 65%;"></div>
+                    </div>
+                    <p style="color: #1e40af; font-size: 14px;">65% ready for World Cup Masters 2026 - Excellent progress!</p>
+                </div>
+            `;
+            
+            document.getElementById('content').innerHTML = roadmapHTML;
+        }
+
+        function showInjuryReport() {
+            openModal('🏥 Report Injury', `
+                <div>
+                    <h4 style="margin-bottom: 16px;">Report New Injury</h4>
+                    <select class="input">
+                        <option>Select injury type</option>
+                        <option>Muscle strain</option>
+                        <option>Joint pain</option>
+                        <option>Bruise/Impact</option>
+                        <option>Overuse injury</option>
+                        <option>Other</option>
+                    </select>
+                    <select class="input">
+                        <option>Select body part</option>
+                        <option>Ankle</option>
+                        <option>Knee</option>
+                        <option>Hip</option>
+                        <option>Back</option>
+                        <option>Shoulder</option>
+                        <option>Wrist</option>
+                        <option>Other</option>
+                    </select>
+                    <select class="input">
+                        <option>Pain level (1-10)</option>
+                        <option>1 - Very mild</option>
+                        <option>2 - Mild</option>
+                        <option>3 - Moderate</option>
+                        <option>4 - Moderate+</option>
+                        <option>5 - Significant</option>
+                        <option>6 - Significant+</option>
+                        <option>7 - Severe</option>
+                        <option>8 - Very severe</option>
+                        <option>9 - Extreme</option>
+                        <option>10 - Unbearable</option>
+                    </select>
+                    <textarea class="input" placeholder="Describe how the injury occurred and any symptoms..." rows="4"></textarea>
+                    <button class="button red" style="width: 100%; margin-top: 12px;">Submit Injury Report</button>
+                    <p style="color: #6b7280; font-size: 14px; margin-top: 12px;">This report will be sent to your coach and medical team immediately.</p>
+                </div>
+            `);
+        }
+
+        // Coach Functions
+        function showTeamRoster() {
+            let rosterHTML = `
+                <h3>👥 SA Masters Ladies 50+ Squad</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 20px;">
+            `;
+            
+            mockData.worldCupSquad.forEach(player => {
+                const injuryBadge = player.injured ? `<span class="badge red">Injured</span>` : `<span class="badge green">Fit</span>`;
+                rosterHTML += `
+                    <div class="exercise-card">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                            <h4>${player.name}</h4>
+                            ${injuryBadge}
+                        </div>
+                        <p><strong>Position:</strong> ${player.position}</p>
+                        <p><strong>Fitness:</strong> ${player.fitness}%</p>
+                        <p><strong>Last 1.2km:</strong> ${player.lastTrial}</p>
+                        <p><strong>Contact:</strong> ${player.contact}</p>
+                        ${player.injured ? `<div class="injury-alert">⚠️ ${player.injury} - Return: ${player.returnDate}</div>` : ''}
+                        <button class="button" onclick="showPlayerDetails('${player.name}')" style="width: 100%; margin-top: 8px;">View Details</button>
+                    </div>
+                `;
+            });
+            
+            rosterHTML += `</div>`;
+            document.getElementById('content').innerHTML = rosterHTML;
+        }
+
+        function showExercisePrograms() {
+            let programsHTML = `
+                <h3>🏋️ Exercise Programs - Ladies 50+ Specialized</h3>
+                <div style="margin-top: 20px;">
+            `;
+            
+            mockData.provincialTrainingPrograms.forEach(program => {
+                programsHTML += `
+                    <div class="exercise-card">
+                        <h4>${program.name}</h4>
+                        <span class="badge green">${program.category}</span>
+                        <div style="margin-top: 16px;">
+                `;
+                
+                program.exercises.forEach(exercise => {
+                    programsHTML += `
+                        <div style="border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; margin: 8px 0;">
+                            <div class="exercise-image">📸 ${exercise.name} Image</div>
+                            <h5>${exercise.name}</h5>
+                            <p><strong>Sets:</strong> ${exercise.sets}</p>
+                            ${exercise.rest ? `<p><strong>Rest:</strong> ${exercise.rest}</p>` : ''}
+                            <p><strong>Intensity:</strong> ${exercise.intensity}</p>
+                            ${exercise.modifications ? `<p style="color: #9333ea;"><strong>50+ Modifications:</strong> ${exercise.modifications}</p>` : ''}
+                        </div>
+                    `;
+                });
+                
+                programsHTML += `</div></div>`;
+            });
+            
+            programsHTML += `</div>`;
+            document.getElementById('content').innerHTML = programsHTML;
+        }
+
+        function showTeamWellness() {
+            document.getElementById('content').innerHTML = `
+                <h3>📊 Team Wellness Overview</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0;">
+                    <div style="background: #dcfce7; padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #16a34a;">7.8</div>
+                        <div style="color: #166534; font-size: 14px;">Avg Energy Level</div>
+                    </div>
+                    <div style="background: #dbeafe; padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #2563eb;">7.2</div>
+                        <div style="color: #1e40af; font-size: 14px;">Avg Sleep Quality</div>
+                    </div>
+                    <div style="background: #f3e8ff; padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #9333ea;">94%</div>
+                        <div style="color: #7c3aed; font-size: 14px;">Wellness Compliance</div>
+                    </div>
+                </div>
+                <div class="exercise-card">
+                    <h4>Individual Wellness Status</h4>
+                    <div style="margin-top: 16px;">
+                        ${mockData.worldCupSquad.map(player => `
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: #f9fafb; border-radius: 4px; margin-bottom: 8px;">
+                                <span style="font-weight: 500;">${player.name}</span>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="width: 12px; height: 12px; background: #16a34a; border-radius: 50%;"></div>
+                                    <span style="font-size: 14px; color: #6b7280;">Excellent</span>
+                                </div>
                             </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function showInjuryTracking() {
+            const injuredPlayers = mockData.worldCupSquad.filter(player => player.injured);
+            
+            document.getElementById('content').innerHTML = `
+                <h3>🏥 Injury Tracking & Management</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div class="exercise-card">
+                        <h4>Current Injuries</h4>
+                        ${injuredPlayers.length > 0 ? injuredPlayers.map(player => `
+                            <div class="injury-alert" style="margin: 8px 0;">
+                                <strong>${player.name}</strong><br>
+                                ${player.injury}<br>
+                                Expected return: ${player.returnDate}
+                            </div>
+                        `).join('') : '<p style="color: #16a34a;">🎉 No current injuries! Excellent team health.</p>'}
+                        <button class="button red" onclick="showAddInjury()" style="width: 100%; margin-top: 12px;">Add Player Injury</button>
+                    </div>
+                    <div class="exercise-card">
+                        <h4>Injury Prevention Tips</h4>
+                        <ul style="margin: 12px 0; padding-left: 20px;">
+                            <li>Proper warm-up before training (10-15 minutes)</li>
+                            <li>Cool-down and stretching after sessions</li>
+                            <li>Adequate hydration throughout training</li>
+                            <li>Listen to your body - rest when needed</li>
+                            <li>Maintain proper nutrition for recovery</li>
+                            <li>Regular wellness check-ins</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="exercise-card" style="margin-top: 20px;">
+                    <h4>Injury Statistics</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-top: 12px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 20px; font-weight: bold; color: #dc2626;">${injuredPlayers.length}</div>
+                            <div style="font-size: 14px; color: #6b7280;">Current Injuries</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 20px; font-weight: bold; color: #16a34a;">${Math.round((1 - injuredPlayers.length / mockData.worldCupSquad.length) * 100)}%</div>
+                            <div style="font-size: 14px; color: #6b7280;">Fit Players</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 20px; font-weight: bold; color: #2563eb;">2%</div>
+                            <div style="font-size: 14px; color: #6b7280;">Season Injury Rate</div>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        function showWorldCup() {
+        function showPerformanceAnalytics() {
             document.getElementById('content').innerHTML = `
-                <h3 class="text-lg font-semibold mb-4">World Cup Masters 2026 Journey</h3>
-                <div class="space-y-4">
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <h4 class="font-medium text-yellow-800">African Masters International</h4>
-                        <p class="text-sm text-yellow-600">November 21-24, 2025 • Johannesburg, SA</p>
-                        <p class="text-sm text-yellow-700 mt-2">Continental championship preparation tournament</p>
+                <h3>📈 Performance Analytics</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin: 20px 0;">
+                    <div style="background: #dcfce7; padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #16a34a;">89%</div>
+                        <div style="color: #166534; font-size: 14px;">Team Fitness Average</div>
+                        <div class="progress-bar" style="margin: 8px 0;">
+                            <div class="progress-fill" style="width: 89%; background: #16a34a;"></div>
+                        </div>
                     </div>
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <h4 class="font-medium text-blue-800">National Training Camp</h4>
-                        <p class="text-sm text-blue-600">February 2026 (TBC) • Durban, KZN</p>
-                        <p class="text-sm text-blue-700 mt-2">Intensive preparation camp</p>
+                    <div style="background: #dbeafe; padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #2563eb;">6:58</div>
+                        <div style="color: #1e40af; font-size: 14px;">Avg 1.2km Time</div>
                     </div>
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                        <h4 class="font-medium text-green-800">World Cup Masters 2026</h4>
-                        <p class="text-sm text-green-600">July 22 - August 2, 2026 • Rotterdam, Netherlands</p>
-                        <p class="text-sm text-green-700 mt-2">Main tournament - our ultimate goal!</p>
+                    <div style="background: #f3e8ff; padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #9333ea;">94%</div>
+                        <div style="color: #7c3aed; font-size: 14px;">Training Attendance</div>
                     </div>
-                </div>
-                <div class="mt-6 bg-blue-50 p-4 rounded-lg">
-                    <h4 class="font-medium text-blue-800 mb-2">Your Progress</h4>
-                    <div class="w-full bg-gray-200 rounded-full h-3">
-                        <div class="bg-blue-600 h-3 rounded-full" style="width: 65%"></div>
-                    </div>
-                    <p class="text-sm text-blue-700 mt-2">65% ready for World Cup Masters 2026</p>
-                </div>
-            `;
-        }
-
-        function showRoster() {
-            document.getElementById('content').innerHTML = `
-                <h3 class="text-lg font-semibold mb-4">SA Masters Ladies 50+ Squad</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="bg-white border rounded-lg p-4">
-                        <h4 class="font-medium">Sarah Johnson</h4>
-                        <p class="text-sm text-gray-600">Forward • Fitness: 92%</p>
-                        <p class="text-sm text-gray-600">Last 1.2km: 6:45</p>
-                    </div>
-                    <div class="bg-white border rounded-lg p-4">
-                        <h4 class="font-medium">Mary Williams</h4>
-                        <p class="text-sm text-gray-600">Midfielder • Fitness: 88%</p>
-                        <p class="text-sm text-gray-600">Last 1.2km: 7:12</p>
-                    </div>
-                    <div class="bg-white border rounded-lg p-4">
-                        <h4 class="font-medium">Linda Brown</h4>
-                        <p class="text-sm text-gray-600">Defender • Fitness: 85%</p>
-                        <p class="text-sm text-gray-600">Last 1.2km: 7:30</p>
+                    <div style="background: #fef3c7; padding: 16px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold; color: #ca8a04;">76%</div>
+                        <div style="color: #92400e; font-size: 14px;">World Cup Readiness</div>
                     </div>
                 </div>
-            `;
-        }
-
-        function showPrograms() {
-            showTraining(); // Reuse training function
-        }
-
-        function showAnalytics() {
-            document.getElementById('content').innerHTML = `
-                <h3 class="text-lg font-semibold mb-4">Performance Analytics</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-green-50 p-4 rounded-lg text-center">
-                        <p class="text-2xl font-bold text-green-600">89%</p>
-                        <p class="text-sm text-green-700">Team Fitness</p>
-                    </div>
-                    <div class="bg-blue-50 p-4 rounded-lg text-center">
-                        <p class="text-2xl font-bold text-blue-600">6:58</p>
-                        <p class="text-sm text-blue-700">Avg 1.2km Time</p>
-                    </div>
-                    <div class="bg-purple-50 p-4 rounded-lg text-center">
-                        <p class="text-2xl font-bold text-purple-600">94%</p>
-                        <p class="text-sm text-purple-700">Training Attendance</p>
+                <div class="exercise-card">
+                    <h4>Key Performance Indicators</h4>
+                    <div style="margin: 16px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Improvement Rate:</span>
+                            <span style="font-weight: bold; color: #16a34a;">+12%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Injury Rate:</span>
+                            <span style="font-weight: bold; color: #16a34a;">2% (Excellent)</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Wellness Compliance:</span>
+                            <span style="font-weight: bold; color: #16a34a;">94%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Team Morale:</span>
+                            <span style="font-weight: bold; color: #16a34a;">Excellent</span>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-yellow-50 p-4 rounded-lg">
-                    <h4 class="font-medium text-yellow-800 mb-2">Coach Recommendations</h4>
-                    <ul class="text-sm text-yellow-700 space-y-1">
-                        <li>• Focus on speed work for players above 7:00</li>
-                        <li>• Increase recovery sessions for fatigued players</li>
-                        <li>• Excellent progress toward World Cup goals</li>
+                <div style="background: #fef3c7; padding: 16px; border-radius: 8px; margin-top: 20px;">
+                    <h4 style="color: #92400e; margin-bottom: 12px;">Coach Recommendations</h4>
+                    <ul style="color: #92400e; margin-left: 20px;">
+                        <li>Focus on speed work for players with 1.2km times above 7:00</li>
+                        <li>Increase recovery sessions for players showing fatigue signs</li>
+                        <li>Excellent progress toward World Cup Masters 2026 goals</li>
+                        <li>Continue current injury prevention protocols</li>
                     </ul>
                 </div>
             `;
         }
 
-        function showManagement() {
-            showRoster(); // Reuse roster function
+        // Manager Functions
+        function showSquadManagement() {
+            showTeamRoster(); // Reuse the team roster function
         }
 
-        function showBudget() {
+        function showBudgetFinance() {
             document.getElementById('content').innerHTML = `
-                <h3 class="text-lg font-semibold mb-4">Budget & Finance</h3>
-                <div class="bg-white border rounded-lg p-6">
-                    <h4 class="font-medium mb-4">World Cup Budget</h4>
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span>Total Budget:</span>
-                            <span class="font-medium">R150,000</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Spent:</span>
-                            <span class="font-medium text-red-600">R45,000</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Remaining:</span>
-                            <span class="font-medium text-green-600">R105,000</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-3">
-                            <div class="bg-blue-600 h-3 rounded-full" style="width: 30%"></div>
+                <h3>💰 Budget & Finance Management</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div class="exercise-card">
+                        <h4>World Cup Masters 2026 Budget</h4>
+                        <div style="margin: 16px 0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Total Budget:</span>
+                                <span style="font-weight: bold;">R150,000</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Spent:</span>
+                                <span style="font-weight: bold; color: #dc2626;">R45,000</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                                <span>Remaining:</span>
+                                <span style="font-weight: bold; color: #16a34a;">R105,000</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 30%;"></div>
+                            </div>
+                            <p style="font-size: 14px; color: #6b7280; margin-top: 8px;">30% of budget used</p>
                         </div>
                     </div>
+                    <div class="exercise-card">
+                        <h4>Expense Breakdown</h4>
+                        <div style="margin: 16px 0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Travel & Accommodation:</span>
+                                <span>R25,000</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Equipment & Gear:</span>
+                                <span>R12,000</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Training Camps:</span>
+                                <span>R8,000</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Tournament Fees:</span>
+                                <span>R0 (Pending)</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Medical & Insurance:</span>
+                                <span>R0 (Pending)</span>
+                            </div>
+                        </div>
+                        <button class="button green" style="width: 100%;">Add New Expense</button>
+                    </div>
+                </div>
+                <div style="background: #dbeafe; padding: 16px; border-radius: 8px; margin-top: 20px;">
+                    <h4 style="color: #1e40af; margin-bottom: 12px;">Financial Status & Recommendations</h4>
+                    <p style="color: #1e40af; font-size: 14px;">✅ Budget is well on track for World Cup Masters 2026</p>
+                    <p style="color: #1e40af; font-size: 14px;">⚠️ Major expenses (flights to Netherlands) still pending - recommend securing early booking discounts</p>
+                    <p style="color: #1e40af; font-size: 14px;">💡 Consider fundraising activities to supplement budget for additional training camps</p>
                 </div>
             `;
         }
 
-        function showWhatsApp() {
+        function showTournamentPlanning() {
+            showWorldCupRoadmap(); // Reuse the World Cup roadmap
+        }
+
+        function showWhatsAppHub() {
             document.getElementById('content').innerHTML = `
-                <h3 class="text-lg font-semibold mb-4">WhatsApp Communication Hub</h3>
-                <div class="space-y-4">
-                    <button onclick="sendMessage('training')" class="w-full text-left p-4 bg-green-50 hover:bg-green-100 rounded-lg border">
-                        <p class="font-medium">Send Training Reminder</p>
-                        <p class="text-sm text-gray-600">Notify team about upcoming session</p>
-                    </button>
-                    <button onclick="sendMessage('wellness')" class="w-full text-left p-4 bg-blue-50 hover:bg-blue-100 rounded-lg border">
-                        <p class="font-medium">Wellness Check Request</p>
-                        <p class="text-sm text-gray-600">Ask players to update wellness logs</p>
-                    </button>
-                    <button onclick="sendMessage('motivation')" class="w-full text-left p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg border">
-                        <p class="font-medium">Team Motivation</p>
-                        <p class="text-sm text-gray-600">Send encouraging message to squad</p>
-                    </button>
+                <h3>💬 WhatsApp Communication Hub</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div class="exercise-card">
+                        <h4>Quick Message Templates</h4>
+                        <button onclick="sendWhatsAppMessage('training')" style="width: 100%; text-align: left; padding: 12px; background: #dcfce7; border: 1px solid #16a34a; border-radius: 6px; margin: 8px 0; cursor: pointer;">
+                            <div style="font-weight: 500;">🏑 Training Reminder</div>
+                            <div style="font-size: 14px; color: #166534;">Send training session reminder to team</div>
+                        </button>
+                        <button onclick="sendWhatsAppMessage('wellness')" style="width: 100%; text-align: left; padding: 12px; background: #dbeafe; border: 1px solid #2563eb; border-radius: 6px; margin: 8px 0; cursor: pointer;">
+                            <div style="font-weight: 500;">💪 Wellness Check</div>
+                            <div style="font-size: 14px; color: #1e40af;">Request wellness log updates</div>
+                        </button>
+                        <button onclick="sendWhatsAppMessage('motivation')" style="width: 100%; text-align: left; padding: 12px; background: #fef3c7; border: 1px solid #ca8a04; border-radius: 6px; margin: 8px 0; cursor: pointer;">
+                            <div style="font-weight: 500;">🏆 Team Motivation</div>
+                            <div style="font-size: 14px; color: #92400e;">Send encouraging message to squad</div>
+                        </button>
+                        <button onclick="sendWhatsAppMessage('worldcup')" style="width: 100%; text-align: left; padding: 12px; background: #f3e8ff; border: 1px solid #9333ea; border-radius: 6px; margin: 8px 0; cursor: pointer;">
+                            <div style="font-weight: 500;">🌍 World Cup Update</div>
+                            <div style="font-size: 14px; color: #7c3aed;">Share World Cup preparation news</div>
+                        </button>
+                    </div>
+                    <div class="exercise-card">
+                        <h4>Recent Messages</h4>
+                        <div style="margin: 16px 0;">
+                            <div style="padding: 8px; background: #f9fafb; border-radius: 4px; margin-bottom: 8px;">
+                                <div style="font-weight: 500; font-size: 14px;">Training Tomorrow - 6 PM</div>
+                                <div style="font-size: 12px; color: #6b7280;">Sent to 18 players • 2 hours ago</div>
+                            </div>
+                            <div style="padding: 8px; background: #f9fafb; border-radius: 4px; margin-bottom: 8px;">
+                                <div style="font-weight: 500; font-size: 14px;">Wellness Check-in Request</div>
+                                <div style="font-size: 12px; color: #6b7280;">Sent to 18 players • 1 day ago</div>
+                            </div>
+                            <div style="padding: 8px; background: #f9fafb; border-radius: 4px; margin-bottom: 8px;">
+                                <div style="font-weight: 500; font-size: 14px;">World Cup Squad Update</div>
+                                <div style="font-size: 12px; color: #6b7280;">Sent to 18 players • 3 days ago</div>
+                            </div>
+                        </div>
+                        <a href="https://wa.me/27833095413" target="_blank" class="button green" style="width: 100%; text-decoration: none; display: block; text-align: center;">Open WhatsApp</a>
+                    </div>
+                </div>
+                <div class="exercise-card" style="margin-top: 20px;">
+                    <h4>Communication Guidelines</h4>
+                    <ul style="margin: 12px 0; padding-left: 20px; color: #6b7280;">
+                        <li>Send training reminders 24 hours in advance</li>
+                        <li>Request wellness updates every Monday morning</li>
+                        <li>Share motivational messages before important matches</li>
+                        <li>Keep World Cup updates regular but not overwhelming</li>
+                        <li>Always include contact info for urgent matters</li>
+                    </ul>
                 </div>
             `;
         }
 
-        function sendMessage(type) {
+        // Utility Functions
+        function openModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        function showMilestoneDetails(milestoneId) {
+            const milestone = mockData.worldCupRoadmap.find(m => m.id == milestoneId);
+            if (milestone) {
+                openModal(`🏆 ${milestone.title}`, `
+                    <div>
+                        <p><strong>📅 Date:</strong> ${milestone.date}</p>
+                        <p><strong>📍 Location:</strong> ${milestone.location}</p>
+                        <p><strong>🎯 Fitness Target:</strong> ${milestone.fitnessTarget}</p>
+                        <p><strong>🔥 Key Focus:</strong> ${milestone.keyFocus}</p>
+                        <p style="margin-top: 16px;"><strong>Description:</strong></p>
+                        <p>${milestone.description}</p>
+                        ${currentRole === 'coach' ? `
+                            <div style="margin-top: 20px;">
+                                <h4>Coach Actions:</h4>
+                                <button class="button" style="margin: 4px;">Edit Milestone</button>
+                                <button class="button green" style="margin: 4px;">Add Training Plan</button>
+                                <button class="button purple" style="margin: 4px;">Set Team Goals</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `);
+            }
+        }
+
+        function sendWhatsAppMessage(type) {
             const messages = {
-                'training': 'Hi team! Training session tomorrow at 6 PM. Please bring water and wear appropriate gear. 🏑',
-                'wellness': 'Good morning! Please update your wellness log for today. Track energy, sleep, and any concerns. 💪',
-                'motivation': 'Great work this week! Your dedication shows in your performance. Keep pushing toward World Cup goals! 🏆'
+                'training': 'Hi SA Masters Ladies 50+ Squad! 🏑 Training session tomorrow at 6 PM. Please bring water, wear appropriate gear, and arrive 15 minutes early for warm-up. See you there!',
+                'wellness': 'Good morning team! 💪 Please update your wellness log for today. Remember to track energy levels, sleep quality, and any concerns. Your health is our priority for World Cup success!',
+                'motivation': 'Amazing work this week, SA Masters Ladies 50+ Squad! 🏆 Your dedication and improvement are incredible. Keep pushing toward our World Cup Masters 2026 goals - we\'re getting stronger every day!',
+                'worldcup': 'World Cup Masters 2026 Update! 🌍 Great progress team - we\'re 65% ready! Next milestone: African Masters International in Johannesburg. Keep up the excellent training and wellness tracking!'
             };
             
-            const message = messages[type];
+            const message = messages[type] || 'Hello from SA Masters Ladies 50+ Squad coaching team!';
             const whatsappUrl = `https://wa.me/27833095413?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
+
+        // Close modal when clicking outside
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
