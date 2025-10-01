@@ -910,5 +910,25 @@ html
             }
         });
     </script>
-</body>
+<script>
+// Simple modal fix
+function showMilestoneDetails(milestoneId) {
+    const milestone = mockData.worldCupRoadmap.find(m => m.id == milestoneId);
+    if (milestone) {
+        alert(`🏆 ${milestone.title}\n\n📅 ${milestone.date}\n📍 ${milestone.location}\n🎯 Fitness Target: ${milestone.fitnessTarget}\n🔥 Key Focus: ${milestone.keyFocus}\n\n${milestone.description}`);
+    }
+}
+
+// Fix other modal functions
+function showPlayerDetails(playerName) {
+    const player = mockData.worldCupSquad.find(p => p.name === playerName);
+    if (player) {
+        alert(`👤 ${player.name}\n\nPosition: ${player.position}\nFitness: ${player.fitness}%\nLast 1.2km: ${player.lastTrial}\nContact: ${player.contact}${player.injured ? `\n\n⚠️ INJURED: ${player.injury}\nReturn Date: ${player.returnDate}` : '\n\n✅ Currently fit and available'}`);
+    }
+}
+
+function showAddInjury() {
+    alert('🏥 Add Player Injury\n\nThis feature allows coaches to:\n• Record new injuries\n• Set return dates\n• Add treatment notes\n• Notify medical team\n\nContact LK Performance for injury management: +27 83 309 5413');
+}
+</script></body>
 </html>
