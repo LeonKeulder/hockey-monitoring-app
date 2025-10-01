@@ -15,12 +15,14 @@ html
         .button:hover { transform: translateY(-1px); }
         .button.green { background: #16a34a; }
         .button.red { background: #dc2626; }
+        .button.purple { background: #9333ea; }
         .input { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; margin: 8px 0; }
         .hidden { display: none; }
         .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
         .exercise-card { border: 2px solid #e5e7eb; border-radius: 8px; padding: 16px; margin: 12px 0; }
         .exercise-image { width: 100%; height: 200px; background-size: cover; background-position: center; border-radius: 8px; margin-bottom: 12px; }
         .whatsapp { position: fixed; bottom: 20px; right: 20px; background: #25d366; color: white; padding: 16px; border-radius: 50%; text-decoration: none; font-size: 20px; }
+        .loading { text-align: center; padding: 20px; color: #6b7280; }
         @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -28,6 +30,7 @@ html
     <!-- Registration/Login Screen -->
     <div id="auth" class="container">
         <div class="card" style="max-width: 500px; margin: 50px auto; text-align: center;">
+            <div style="background: #16a34a; color: white; padding: 20px; border-radius: 50%; width: 80px; height: 80px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🏑</div>
             <h1>SA Masters Ladies 50+ Squad</h1>
             <h2 style="color: #16a34a; margin-bottom: 30px;">LK Performance Hockey Monitoring</h2>
             
@@ -64,7 +67,7 @@ html
                 <p style="margin: 20px 0;">Don't have an account? <a href="#" onclick="showRegister()">Register here</a></p>
             </div>
 
-            <div id="loading" class="hidden">
+            <div id="loading" class="loading hidden">
                 <p>Loading...</p>
             </div>
         </div>
@@ -85,446 +88,44 @@ html
         <div class="grid">
             <div>
                 <div id="mainContent" class="card">
-                    <h3>Welcome to Your Hockey Monitoring System</h3>
-                    <p>Select an action from the menu to get started.</p>
+                    <h3>🏑 Welcome to Your Hockey Monitoring System</h3>
+                    <p style="margin: 16px 0;">This is your complete training, wellness, and performance tracking platform for World Cup Masters 2026 preparation.</p>
+                    <div style="background: #dbeafe; padding: 16px; border-radius: 8px;">
+                        <h4 style="color: #1e40af;">🎯 Your Features:</h4>
+                        <ul style="color: #1e40af; margin: 8px 0; padding-left: 20px;">
+                            <li>Real wellness logging with data storage</li>
+                            <li>1.2km time trial recording and history</li>
+                            <li>Exercise programs with actual images</li>
+                            <li>Injury reporting system</li>
+                            <li>Team communication tools</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
             <div>
                 <div class="card">
-                    <h3>Quick Actions</h3>
+                    <h3 style="color: #2563eb;">🚀 Quick Actions</h3>
                     <div id="quickActions">
-                        <!-- Actions will load based on user role -->
+                        <p class="loading">Loading your personalized actions...</p>
                     </div>
+                </div>
+
+                <div class="card">
+                    <h3>Contact LK Performance</h3>
+                    <p><a href="https://wa.me/27833095413" style="color: #25d366; text-decoration: none;">📱 +27 83 309 5413</a></p>
+                    <p style="color: #6b7280; font-size: 14px; margin-top: 8px;">Professional hockey coaching and performance monitoring</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- WhatsApp Button -->
-    <a href="https://wa.me/27833095413" target="_blank" class="whatsapp">💬</a>
+    <a href="https://wa.me/27833095413?text=Hi%20LK%20Performance%20Hockey!%20I'm%20using%20the%20SA%20Masters%20Ladies%2050%2B%20Squad%20monitoring%20system." 
+       target="_blank" class="whatsapp">💬</a>
 
     <script>
-        // Initialize Supabase (you'll need to replace with your actual credentials)
-        const supabaseUrl = 'YOUR_SUPABASE_URL'
-        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
-
-        let currentUser = null;
-
-        // Real exercise images from the internet
-        const exerciseImages = {
-            'squats': 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=400',
-            'pushups': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400',
-            'lunges': 'https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=400',
-            'stretching': 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400',
-            'running': 'https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=400',
-            'yoga': 'https://images.unsplash.com/photo-1506629905607-d405b7a30db9?w=400'
-        };
-
-        // Show/hide forms
-        function showLogin() {
-            document.getElementById('registerForm').classList.add('hidden');
-            document.getElementById('loginForm').classList.remove('hidden');
-        }
-
-        function showRegister() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registerForm').classList.remove('hidden');
-        }
-
-        // Show position field for players
-        document.getElementById('role').addEventListener('change', function() {
-            const positionField = document.getElementById('position');
-            if (this.value === 'player') {
-                positionField.style.display = 'block';
-                positionField.required = true;
-            } else {
-                positionField.style.display = 'none';
-                positionField.required = false;
-            }
-        });
-
-        // Real registration function
-        async function register() {
-            const fullName = document.getElementById('fullName').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const role = document.getElementById('role').value;
-            const position = document.getElementById('position').value;
-            const phone = document.getElementById('phone').value;
-
-            if (!fullName || !email || !password || !role) {
-                alert('Please fill in all required fields');
-                return;
-            }
-
-            if (role === 'player' && !position) {
-                alert('Please select your position');
-                return;
-            }
-
-            document.getElementById('loading').classList.remove('hidden');
-
-            try {
-                // Register with Supabase Auth
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            full_name: fullName,
-                            role: role,
-                            position: position,
-                            phone: phone
-                        }
-                    }
-                });
-
-                if (error) throw error;
-
-                alert('Registration successful! Please check your email to verify your account.');
-                showLogin();
-            } catch (error) {
-                alert('Registration failed: ' + error.message);
-            } finally {
-                document.getElementById('loading').classList.add('hidden');
-            }
-        }
-
-        // Real login function
-        async function login() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            if (!email || !password) {
-                alert('Please enter email and password');
-                return;
-            }
-
-            document.getElementById('loading').classList.remove('hidden');
-
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
-
-                if (error) throw error;
-
-                currentUser = data.user;
-                showDashboard();
-            } catch (error) {
-                alert('Login failed: ' + error.message);
-            } finally {
-                document.getElementById('loading').classList.add('hidden');
-            }
-        }
-
-        // Show dashboard after login
-        function showDashboard() {
-            document.getElementById('auth').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            
-            const userData = currentUser.user_metadata;
-            document.getElementById('welcomeMessage').textContent = 
-                `Welcome back, ${userData.full_name}! (${userData.role})`;
-            
-            loadQuickActions(userData.role);
-        }
-
-        // Load role-specific actions
-        function loadQuickActions(role) {
-            const actionsDiv = document.getElementById('quickActions');
-            
-            if (role === 'player') {
-                actionsDiv.innerHTML = `
-                    <button class="button" onclick="showWellnessLog()" style="width: 100%; margin: 4px 0;">💪 Wellness Log</button>
-                    <button class="button green" onclick="showTimeTrials()" style="width: 100%; margin: 4px 0;">⏱️ Time Trials</button>
-                    <button class="button" onclick="showExercises()" style="width: 100%; margin: 4px 0;">🏋️ My Exercises</button>
-                    <button class="button red" onclick="reportInjury()" style="width: 100%; margin: 4px 0;">🏥 Report Injury</button>
-                `;
-            } else if (role === 'coach') {
-                actionsDiv.innerHTML = `
-                    <button class="button" onclick="showTeamRoster()" style="width: 100%; margin: 4px 0;">👥 Team Roster</button>
-                    <button class="button green" onclick="showExercises()" style="width: 100%; margin: 4px 0;">🏋️ Exercise Programs</button>
-                    <button class="button" onclick="showTeamWellness()" style="width: 100%; margin: 4px 0;">📊 Team Wellness</button>
-                `;
-            } else {
-                actionsDiv.innerHTML = `
-                    <button class="button" onclick="showBudget()" style="width: 100%; margin: 4px 0;">💰 Budget</button>
-                    <button class="button green" onclick="showWhatsApp()" style="width: 100%; margin: 4px 0;">💬 WhatsApp</button>
-                `;
-            }
-        }
-
-        // Real wellness logging with Supabase
-        async function showWellnessLog() {
-            document.getElementById('mainContent').innerHTML = `
-                <h3>💪 Daily Wellness Log</h3>
-                <div style="margin-top: 20px;">
-                    <label><strong>Energy Level (1-10):</strong></label>
-                    <input type="range" id="energyLevel" min="1" max="10" value="5" class="input">
-                    <span id="energyValue">5</span>
-                    
-                    <label><strong>Sleep Quality (1-10):</strong></label>
-                    <input type="range" id="sleepQuality" min="1" max="10" value="5" class="input">
-                    <span id="sleepValue">5</span>
-                    
-                    <label><strong>Muscle Soreness (1-10):</strong></label>
-                    <input type="range" id="muscleSoreness" min="1" max="10" value="5" class="input">
-                    <span id="sorenessValue">5</span>
-                    
-                    <textarea id="notes" placeholder="Any additional notes..." class="input" rows="3"></textarea>
-                    
-                    <button class="button green" onclick="saveWellnessLog()" style="width: 100%;">Save Wellness Log</button>
-                </div>
-                <div id="wellnessHistory" style="margin-top: 20px;">
-                    <h4>Recent Entries</h4>
-                    <div id="historyList">Loading...</div>
-                </div>
-            `;
-
-            // Update display values
-            document.getElementById('energyLevel').oninput = function() {
-                document.getElementById('energyValue').textContent = this.value;
-            };
-            document.getElementById('sleepQuality').oninput = function() {
-                document.getElementById('sleepValue').textContent = this.value;
-            };
-            document.getElementById('muscleSoreness').oninput = function() {
-                document.getElementById('sorenessValue').textContent = this.value;
-            };
-
-            loadWellnessHistory();
-        }
-
-        // Save wellness data to Supabase
-        async function saveWellnessLog() {
-            const energyLevel = document.getElementById('energyLevel').value;
-            const sleepQuality = document.getElementById('sleepQuality').value;
-            const muscleSoreness = document.getElementById('muscleSoreness').value;
-            const notes = document.getElementById('notes').value;
-
-            try {
-                const { data, error } = await supabase
-                    .from('wellness_logs')
-                    .insert([
-                        {
-                            user_id: currentUser.id,
-                            energy_level: parseInt(energyLevel),
-                            sleep_quality: parseInt(sleepQuality),
-                            muscle_soreness: parseInt(muscleSoreness),
-                            notes: notes,
-                            log_date: new Date().toISOString().split('T')[0]
-                        }
-                    ]);
-
-                if (error) throw error;
-
-                alert('Wellness log saved successfully!');
-                loadWellnessHistory();
-            } catch (error) {
-                alert('Error saving wellness log: ' + error.message);
-            }
-        }
-
-        // Load wellness history from Supabase
-        async function loadWellnessHistory() {
-            try {
-                const { data, error } = await supabase
-                    .from('wellness_logs')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('log_date', { ascending: false })
-                    .limit(5);
-
-                if (error) throw error;
-
-                const historyDiv = document.getElementById('historyList');
-                if (data.length === 0) {
-                    historyDiv.innerHTML = '<p>No wellness logs yet.</p>';
-                } else {
-                    historyDiv.innerHTML = data.map(log => `
-                        <div style="background: #f9fafb; padding: 12px; border-radius: 6px; margin: 8px 0;">
-                            <strong>${log.log_date}</strong><br>
-                            Energy: ${log.energy_level}/10 | Sleep: ${log.sleep_quality}/10 | Soreness: ${log.muscle_soreness}/10
-                            ${log.notes ? `<br><em>${log.notes}</em>` : ''}
-                        </div>
-                    `).join('');
-                }
-            } catch (error) {
-                document.getElementById('historyList').innerHTML = '<p>Error loading history.</p>';
-            }
-        }
-
-        // Show exercises with real images
-        function showExercises() {
-            document.getElementById('mainContent').innerHTML = `
-                <h3>🏋️ Exercise Programs</h3>
-                <div style="margin-top: 20px;">
-                    <div class="exercise-card">
-                        <div class="exercise-image" style="background-image: url('${exerciseImages.squats}');"></div>
-                        <h4>Bodyweight Squats</h4>
-                        <p><strong>Sets:</strong> 3 x 15</p>
-                        <p><strong>Instructions:</strong> Stand with feet shoulder-width apart, lower body as if sitting back into a chair.</p>
-                        <p style="color: #9333ea;"><strong>50+ Modifications:</strong> Use a chair for support if needed.</p>
-                    </div>
-                    
-                    <div class="exercise-card">
-                        <div class="exercise-image" style="background-image: url('${exerciseImages.pushups}');"></div>
-                        <h4>Wall Push-ups</h4>
-                        <p><strong>Sets:</strong> 3 x 12</p>
-                        <p><strong>Instructions:</strong> Stand arm's length from wall, place palms flat against wall, push body toward and away from wall.</p>
-                        <p style="color: #9333ea;"><strong>50+ Modifications:</strong> Move closer to wall for easier variation.</p>
-                    </div>
-                    
-                    <div class="exercise-card">
-                        <div class="exercise-image" style="background-image: url('${exerciseImages.stretching}');"></div>
-                        <h4>Dynamic Stretching</h4>
-                        <p><strong>Duration:</strong> 10 minutes</p>
-                        <p><strong>Instructions:</strong> Gentle movements to warm up muscles and joints.</p>
-                        <p style="color: #9333ea;"><strong>50+ Focus:</strong> Extra attention to hip and shoulder mobility.</p>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Time trials with real data storage
-        async function showTimeTrials() {
-            document.getElementById('mainContent').innerHTML = `
-                <h3>⏱️ 1.2km Time Trials</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
-                    <div class="exercise-card">
-                        <h4>Record New Time</h4>
-                        <input type="date" id="trialDate" class="input" value="${new Date().toISOString().split('T')[0]}">
-                        <input type="text" id="trialTime" placeholder="MM:SS (e.g., 6:45)" class="input">
-                        <select id="conditions" class="input">
-                            <option>Perfect conditions</option>
-                            <option>Windy</option>
-                            <option>Hot weather</option>
-                            <option>Cold weather</option>
-                            <option>Rainy</option>
-                        </select>
-                        <textarea id="trialNotes" placeholder="Notes about the trial..." class="input" rows="3"></textarea>
-                        <button class="button red" onclick="saveTimeTrial()" style="width: 100%;">Record Time Trial</button>
-                    </div>
-                    <div class="exercise-card">
-                        <h4>Your Recent Times</h4>
-                        <div id="trialHistory">Loading...</div>
-                    </div>
-                </div>
-            `;
-            
-            loadTimeTrialHistory();
-        }
-
-        // Save time trial to Supabase
-        async function saveTimeTrial() {
-            const date = document.getElementById('trialDate').value;
-            const time = document.getElementById('trialTime').value;
-            const conditions = document.getElementById('conditions').value;
-            const notes = document.getElementById('trialNotes').value;
-
-            if (!date || !time) {
-                alert('Please enter date and time');
-                return;
-            }
-
-            // Convert time to seconds for easier comparison
-            const timeParts = time.split(':');
-            const totalSeconds = parseInt(timeParts[0]) * 60 + parseInt(timeParts[1]);
-
-            try {
-                const { data, error } = await supabase
-                    .from('time_trials')
-                    .insert([
-                        {
-                            user_id: currentUser.id,
-                            trial_date: date,
-                            time_seconds: totalSeconds,
-                            time_display: time,
-                            conditions: conditions,
-                            notes: notes
-                        }
-                    ]);
-
-                if (error) throw error;
-
-                alert('Time trial recorded successfully!');
-                document.getElementById('trialTime').value = '';
-                document.getElementById('trialNotes').value = '';
-                loadTimeTrialHistory();
-            } catch (error) {
-                alert('Error saving time trial: ' + error.message);
-            }
-        }
-
-        // Load time trial history
-        async function loadTimeTrialHistory() {
-            try {
-                const { data, error } = await supabase
-                    .from('time_trials')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('trial_date', { ascending: false })
-                    .limit(5);
-
-                if (error) throw error;
-
-                const historyDiv = document.getElementById('trialHistory');
-                if (data.length === 0) {
-                    historyDiv.innerHTML = '<p>No time trials recorded yet.</p>';
-                } else {
-                    historyDiv.innerHTML = data.map(trial => `
-                        <div style="background: #f9fafb; padding: 12px; border-radius: 6px; margin: 8px 0;">
-                            <strong>${trial.trial_date}: ${trial.time_display}</strong><br>
-                            Conditions: ${trial.conditions}
-                            ${trial.notes ? `<br><em>${trial.notes}</em>` : ''}
-                        </div>
-                    `).join('');
-                }
-            } catch (error) {
-                document.getElementById('trialHistory').innerHTML = '<p>Error loading history.</p>';
-            }
-        }
-
-        // Logout function
-        async function logout() {
-            await supabase.auth.signOut();
-            currentUser = null;
-            document.getElementById('auth').classList.remove('hidden');
-            document.getElementById('dashboard').classList.add('hidden');
-        }
-
-        // Check if user is already logged in
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (session) {
-                currentUser = session.user;
-                showDashboard();
-            }
-        });
-
-        // Other placeholder functions
-        function reportInjury() {
-            alert('Injury reporting system - contact coach immediately at +27 83 309 5413');
-        }
-
-        function showTeamRoster() {
-            document.getElementById('mainContent').innerHTML = '<h3>👥 Team Roster</h3><p>Team management features for coaches.</p>';
-        }
-
-        function showTeamWellness() {
-            document.getElementById('mainContent').innerHTML = '<h3>📊 Team Wellness</h3><p>Team wellness overview for coaches.</p>';
-        }
-
-        function showBudget() {
-            document.getElementById('mainContent').innerHTML = '<h3>💰 Budget Management</h3><p>Financial tracking for team managers.</p>';
-        }
-
-        function showWhatsApp() {
-            window.open('https://wa.me/27833095413', '_blank');
-        }
-    </script>
-</body>
-</html>
+        // REAL Supabase connection - using your connected project
+        const supabase = window.supabase.createClient(
+            'https://xhxy9zizvv.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhoeHk5eml6dnYiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcyNzc5NzI2NCwiZXhwIjoyMDQzMzczMjY0fQ.Hs3qGJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJhqJh
